@@ -49,6 +49,10 @@ services:
       - "5432:5432"
     networks:
       - app_net
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./docker/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/database/seed.sql:/docker-entrypoint-initdb.d/seed.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME} -h localhost"]
       interval: 10s
@@ -56,5 +60,8 @@ services:
       retries: 5
       start_period: 20s
 
+volumes:
+  db_data:
+  
 networks:
   app_net:
