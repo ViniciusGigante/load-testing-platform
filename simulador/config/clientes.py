@@ -14,3 +14,5 @@ class Cliente:
     def decide_comprar(self, multiplicador_sazonal=1.0):
         probabilidade_venda = self.nivel_interesse * self.fator_vicio * multiplicador_sazonal
         return probabilidade_venda > 0.5
+    
+    
