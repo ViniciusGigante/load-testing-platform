@@ -7,6 +7,9 @@ CREATE TABLE event_logs (
     client_id VARCHAR(50) NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     event_timestamp TIMESTAMP NOT NULL,
+    instance_id VARCHAR(50) NOT NULL,
+    latency_ms INTEGER NOT NULL,
+    received_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 -- PARTITION BY RANGE (event_timestamp);
