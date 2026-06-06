@@ -2,11 +2,13 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+RUN apk add --no-cache wget
+
 COPY backend/*.json ./
 
-RUN npm i
+RUN npm install
 
-COPY . .
+COPY backend .
 
 EXPOSE 3000
 

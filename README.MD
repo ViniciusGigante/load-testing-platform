@@ -1,0 +1,1 @@
+docker compose exec -it database sh && psql -h database -p 5432 -U user -d loadlab
