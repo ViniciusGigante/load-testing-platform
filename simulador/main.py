@@ -19,7 +19,7 @@ logger = logging.getLogger("Simulador")
 # CONFIGURAÇÃO
 # ─────────────────────────────────────────
 
-BACKEND_URL    = "http://backend:3000/ingest"
+BACKEND_URL = "http://nginx:80/api/ingest"
 TOTAL_CLIENTES = 100
 SLEEP_MIN      = 0.5   # segundos reais mínimos entre decisões por cliente
 SLEEP_MAX      = 5.0   # segundos reais máximos entre decisões por cliente
@@ -47,7 +47,7 @@ async def loop_cliente(cliente: Cliente, timer: TimerSimulado, session: aiohttp.
             "amount":    round(random.uniform(10.0, 500.0), 2),
             "timestamp": tempo_simulado.isoformat(),
         }
-
+        print(evento)
         await enviar_evento(session, evento, cliente.id)
 
 
