@@ -1,39 +1,12 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <title>Observability Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>System Monitor</h1>
-    <div id="status" class="status-pill">Conectando...</div>
-  </header>
-
-  <main>
-    <section class="metrics-grid">
-      <div class="card">
-        <div class="card-label">Total Events</div>
-        <div id="totalEvents" class="metric-value">—</div>
-      </div>
-      <div class="card">
-        <div class="card-label">Avg Latency</div>
-        <div id="avgLatency" class="metric-value">—</div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Servers</h2>
-      <div id="servers" class="server-grid"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Recent Events</h2>
-      <div id="events" class="event-list"></div>
-    </section>
-  </main>
-  
-  <script type="module" src="app.js"></script>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
