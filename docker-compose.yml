@@ -96,7 +96,7 @@ services:
       database:
         condition: service_healthy
       backend-1:
-        condition: service_started  # Força o build do backend-1 terminar antes de avaliar este build
+        condition: service_started  
     networks:
       - app_net
     healthcheck:
@@ -121,7 +121,7 @@ services:
       database:
         condition: service_healthy
       backend-1:
-        condition: service_started  # Força o build do backend-1 terminar antes de avaliar este build
+        condition: service_started  
     networks:
       - app_net
     healthcheck:

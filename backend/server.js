@@ -2,19 +2,24 @@ import express from 'express';
 import { pool } from './models/db.js';
 
 const app = express();
-
 app.use(express.json());
 
 const INSTANCE_ID = process.env.INSTANCE_ID || "unknown";
 
+/* ─────────────────────────────
+   HEALTHCHECK
+───────────────────────────── */
 app.get("/health", (req, res) => {
   return res.status(200).json({ status: "ok" });
 });
 
+/* ─────────────────────────────
+   INGEST (FIXADO)
+───────────────────────────── */
 app.post("/ingest", async (req, res) => {
   const { events } = req.body;
 
-  if (!events || !Array.isArray(events)) {
+  if (!Array.isArray(events) || events.length === 0) {
     return res.status(400).json({
       error: "Payload inválido, esperado um array de eventos"
     });
@@ -33,22 +38,30 @@ app.post("/ingest", async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6)
     `;
 
-    const receivedAt = new Date();
+    const receivedAt = Date.now();
 
     for (const event of events) {
-      const eventTimestamp = new Date(event.timestamp);
+      const eventTimestamp = new Date(event.timestamp).getTime();
 
-      const latencyMs = event.sent_at
-        ? Math.round(receivedAt.getTime() - event.sent_at)
-        : Math.round(receivedAt.getTime() - eventTimestamp.getTime());
+      const sentAt = event.sent_at ? Number(event.sent_at) : null;
+
+      let latencyMs;
+
+      if (sentAt) {
+        latencyMs = Date.now() - sentAt;
+      } else {
+        latencyMs = Date.now() - eventTimestamp;
+      }
+
+      latencyMs = Math.max(0, Math.trunc(latencyMs));
 
       await pool.query(query, [
         event.client_id,
         event.amount,
-        eventTimestamp,
+        new Date(eventTimestamp),
         INSTANCE_ID,
         latencyMs,
-        receivedAt
+        new Date(receivedAt)
       ]);
     }
 
@@ -67,10 +80,11 @@ app.post("/ingest", async (req, res) => {
   }
 });
 
+/* ─────────────────────────────
+   START SERVER
+───────────────────────────── */
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(
-    `Backend ${INSTANCE_ID} running on port ${PORT}`
-  );
+  console.log(`Backend ${INSTANCE_ID} running on port ${PORT}`);
 });
