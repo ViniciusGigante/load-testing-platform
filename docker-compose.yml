@@ -62,6 +62,7 @@ services:
     build:
       context: .
       dockerfile: docker/api/Dockerfile
+    image: load-testing-platform-backend:local
     ports:
       - "3000:3000"
     env_file:
@@ -84,6 +85,7 @@ services:
     build:
       context: .
       dockerfile: docker/api/Dockerfile
+    image: load-testing-platform-backend:local
     ports:
       - "3001:3000"
     env_file:
@@ -93,6 +95,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      backend-1:
+        condition: service_started  # Força o build do backend-1 terminar antes de avaliar este build
     networks:
       - app_net
     healthcheck:
@@ -106,15 +110,18 @@ services:
     build:
       context: .
       dockerfile: docker/api/Dockerfile
+    image: load-testing-platform-backend:local
     ports:
       - "3002:3000"
     env_file:
       - .env
     environment:
-      INSTANCE_ID: backend-3      
+      INSTANCE_ID: backend-3
     depends_on:
       database:
         condition: service_healthy
+      backend-1:
+        condition: service_started  # Força o build do backend-1 terminar antes de avaliar este build
     networks:
       - app_net
     healthcheck:

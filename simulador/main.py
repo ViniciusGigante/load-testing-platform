@@ -56,10 +56,11 @@ async def loop_cliente(cliente: Cliente, timer: TimerSimulado, session: aiohttp.
 # ─────────────────────────────────────────
 
 async def enviar_evento(session: aiohttp.ClientSession, evento: dict, cliente_id):
+    evento_payload = {**evento, "sent_at": time.time() * 1000}
     inicio = time.perf_counter()
     try:
-        async with session.post(BACKEND_URL, json={"events": [evento]}) as resp:
-            latencia_ms = (time.perf_counter() - inicio) * 1000
+        async with session.post(BACKEND_URL, json={"events": [evento_payload]}) as resp:
+            latencia_ms = round((time.perf_counter() - inicio) * 1000, 2)
             if resp.status == 202:
                 logger.info(
                     f"[Cliente {str(cliente_id):>3}] COMPROU | "
@@ -73,7 +74,6 @@ async def enviar_evento(session: aiohttp.ClientSession, evento: dict, cliente_id
         logger.error(f"[Cliente {cliente_id}] Backend indisponível — evento descartado.")
     except Exception as e:
         logger.error(f"[Cliente {cliente_id}] Erro ao enviar evento: {e}")
-
 
 # ─────────────────────────────────────────
 # LOOP DE PERSISTÊNCIA DO TIMER

@@ -38,8 +38,9 @@ app.post("/ingest", async (req, res) => {
     for (const event of events) {
       const eventTimestamp = new Date(event.timestamp);
 
-      const latencyMs =
-        receivedAt.getTime() - eventTimestamp.getTime();
+      const latencyMs = event.sent_at
+        ? Math.round(receivedAt.getTime() - event.sent_at)
+        : Math.round(receivedAt.getTime() - eventTimestamp.getTime());
 
       await pool.query(query, [
         event.client_id,
